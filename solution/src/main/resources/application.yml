@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: @project.name@
+  datasource:
+    url: jdbc:mysql://localhost:3306/codingchallenge
+    username: root
+    password: admin
+    driverClassName: com.mysql.jdbc.Driver
+    continue-on-error: true
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 10
+      data-source-properties:
+        socketTimeout: 120
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show_sql: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  jackson:
+    default-property-inclusion: non_absent
+    serialization:
+      write_dates_as_timestamps: false
+    deserialization:
+      adjust_dates_to_context_time_zone: false
+      fail_on_unknown_properties: false
+
+flyway:
+  enabled: true
+
+endpoints:
+  mappings:
+    sensitive: false
+    enabled: true
+
+info:
+  app:
+    name: ${spring.application.name}
+    description: @project.description@
+    version: @project.version@
+
+server:
+  port: 8080

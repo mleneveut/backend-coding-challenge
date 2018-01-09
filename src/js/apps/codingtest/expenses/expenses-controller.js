@@ -29,7 +29,7 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 		restExpenses.get().then(function(expenses) {
 			$scope.expenses = expenses;
 		});
-	}
+    };
 
 	$scope.saveExpense = function() {
 		if ($scope.expensesform.$valid) {
@@ -37,12 +37,17 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 			restExpenses.post($scope.newExpense).then(function() {
 				// Reload new expenses list
 				loadExpenses();
-			});
+                $scope.clearExpense();
+            })
+                .error(function (err) {
+                    $scope.errorCreation = err.description;
+                });
 		}
 	};
 
 	$scope.clearExpense = function() {
 		$scope.newExpense = {};
+        $scope.errorCreation = '';
 	};
 
 	// Initialise scope variables

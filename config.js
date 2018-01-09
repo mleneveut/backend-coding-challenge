@@ -6,7 +6,10 @@ This will be copied to config.js by the CI Server as part of the test build proc
 
 module.exports = {
 	// Build target directory, this is where all the static files will end up
-	target: "./static",
+    // embedded front option
+    target: "./solution/src/main/resources/static",
+    // microservices option
+    // target: "./static",
 	htmltarget: "./static",
 
 	// Font service url
