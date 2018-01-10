@@ -68,3 +68,19 @@ $ exit
 
 Then you can run the tests :
   * mvn clean test
+  
+Use Case 3
+---
+To be able to eventually put some cache and error management in place (in case the public API is not reachable for example), it has been decided to host the conversion rate service in the back-end.
+
+We put a EhCache for the EUR - GBP conversion rate, living for one hour. The public API will be called only once per hour. We could also store the last value retrieved and send it to the front-end in case of error calling the public API.
+
+The converted amount on client-side will then be sent to the back-end and stored in database. The original Euro amount will not be stored. This could be easily changed if the Use Case needs it.
+
+Use Case 4
+----
+The VAT is calculated on client-side when the user enters an amount. It uses a config 'vat' attribute.
+
+This display is only used for user's information, it will not be stored in the database, and will be calculated again on back-end when retrieving data from DB. We could also remove the back-end calculation and display the VAT in the result list from the same client-side calculation. It's up to the PO. 
+
+This could be easily changed if the Use Case needs to.

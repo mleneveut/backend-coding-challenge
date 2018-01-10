@@ -46,3 +46,4 @@ server:
 
 coding-challenge:
   vat: 0.2
+  conversionUrl: https://api.fixer.io/latest?symbols=GBP&base=EUR

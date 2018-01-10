@@ -19,6 +19,8 @@ module.exports = {
 	apiroot: "/app",
 
 	// Root directory for static content
-	staticRoot: "/"
+    staticRoot: "/",
+
+    vat: "0.2"
 
 };

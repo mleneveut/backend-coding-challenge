@@ -16,7 +16,8 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 	// Update the tab sections
 	$rootScope.selectTabSection("expenses", 0);
 
-	var restExpenses = $restalchemy.init({ root: $config.apiroot }).at("expenses");
+    var restExpenses = $restalchemy.init({root: $config.apiroot}).at("expenses");
+    var restConversionRatesEuro = $restalchemy.init({root: $config.apiroot}).at("conversion-rates/euro");
 
 	$scope.dateOptions = {
 		changeMonth: true,
@@ -33,22 +34,49 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 
 	$scope.saveExpense = function() {
 		if ($scope.expensesform.$valid) {
-			// Post the expense via REST
-			restExpenses.post($scope.newExpense).then(function() {
-				// Reload new expenses list
-				loadExpenses();
-                $scope.clearExpense();
-            })
-                .error(function (err) {
-                    $scope.errorCreation = err.description;
+
+            if ($scope.newExpense.amount.indexOf('EUR') > 0) {
+                restConversionRatesEuro.get().then(function (rate) {
+                    $scope.newExpense.amount = parseFloat($scope.newExpense.amount.substring(0, $scope.newExpense.amount.indexOf('EUR'))) * parseFloat(rate);
+
+                    callExpenses();
                 });
-		}
-	};
+            } else {
+                callExpenses()
+            }
+        }
+    };
+
+    //didn't catch how to do sync calls with restAlchemy, so extracting this call
+    var callExpenses = function () {
+        // Post the expense via REST
+        restExpenses.post($scope.newExpense).then(function () {
+            // Reload new expenses list
+            loadExpenses();
+            $scope.clearExpense();
+        })
+            .error(function (err) {
+                $scope.errorCreation = err.description;
+            });
+    };
 
 	$scope.clearExpense = function() {
 		$scope.newExpense = {};
         $scope.errorCreation = '';
 	};
+
+    $scope.calculateVAT = function () {
+        let amount = $scope.newExpense.amount;
+        if (!amount) {
+            $scope.newExpense.vat = '';
+        } else {
+            if (amount.indexOf('EUR') > 0) {
+                amount = amount.substring(0, $scope.newExpense.amount.indexOf('EUR'));
+            }
+            let vatFloat = parseFloat($config.vat);
+            $scope.newExpense.vat = amount / (1 + vatFloat) * vatFloat;
+        }
+    };
 
 	// Initialise scope variables
 	loadExpenses();

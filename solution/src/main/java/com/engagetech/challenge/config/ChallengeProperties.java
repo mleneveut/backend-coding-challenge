@@ -10,4 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class ChallengeProperties {
 
     private double vat;
+
+    private String conversionUrl;
 }

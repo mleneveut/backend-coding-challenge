@@ -1,0 +1,12 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="true" monitoring="autodetect" dynamicConfig="true">
+
+    <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false"/>
+
+    <cache name="euroConversionRate"
+           maxElementsInMemory="100"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3660"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"/>
+</ehcache>
