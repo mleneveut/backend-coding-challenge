@@ -7,9 +7,11 @@ The application uses a MySQL database, located at localhost:3306 with user root/
 
 You should have a running MySQL with a 'codingchallenge' database :
 
+```
 $ mysql -u root -p admin
 $ CREATE database codingchallenge;
 $ exit
+```
 
 Running the application
 ----
@@ -58,9 +60,11 @@ Run the tests
 ----
 To run the tests you will need a specific database : 'codingchallengetests'
 
+```
 $ mysql -u root -p admin
 $ CREATE database codingchallengetests;
 $ exit
+```
 
 Then you can run the tests :
   * mvn clean test

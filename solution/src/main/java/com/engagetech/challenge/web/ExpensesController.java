@@ -1,5 +1,6 @@
 package com.engagetech.challenge.web;
 
+import com.engagetech.challenge.config.ChallengeProperties;
 import com.engagetech.challenge.dto.ExpenseDto;
 import com.engagetech.challenge.exceptions.ResourceNotFoundException;
 import com.engagetech.challenge.exceptions.UnprocessableEntityException;
@@ -35,6 +36,8 @@ import static java.util.Optional.ofNullable;
 @RequiredArgsConstructor
 public class ExpensesController {
 
+    private final ChallengeProperties properties;
+
     private final ExpenseService expenseService;
 
     @ApiOperation(value = "Get all the expenses")
@@ -42,7 +45,7 @@ public class ExpensesController {
     public ResponseEntity<List<ExpenseDto>> getAll() {
         List<ExpenseDto> dtos = expenseService.findAll()
                 .stream()
-                .map(e -> ExpenseMapper.instance().toExpenseDto(e))
+                .map(e -> ExpenseMapper.instance().toExpenseDto(e, properties.getVat()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
@@ -52,7 +55,7 @@ public class ExpensesController {
     @GetMapping("/{id}")
     public ResponseEntity<ExpenseDto> getById(@PathVariable long id) {
         return ofNullable(expenseService.getById(id))
-                .map(e -> ExpenseMapper.instance().toExpenseDto(e))
+                .map(e -> ExpenseMapper.instance().toExpenseDto(e, properties.getVat()))
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("The expense %d can not be found", id)));
     }
@@ -65,7 +68,7 @@ public class ExpensesController {
 
         return ofNullable(ExpenseMapper.instance().toExpense(dto))
                 .map(expenseService::save)
-                .map(savedDao -> ExpenseMapper.instance().toExpenseDto(savedDao))
+                .map(savedDao -> ExpenseMapper.instance().toExpenseDto(savedDao, properties.getVat()))
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new UnprocessableEntityException(String.format("The expense can not be saved : ", dto)));
     }

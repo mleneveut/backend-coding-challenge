@@ -31,9 +31,4 @@ public class ExpenseDto {
     @ApiModelProperty(value = "The expense's reason")
     private String reason;
 
-    public Double getVat() {
-        double ht = amount.doubleValue() / 1.2;
-        return ht * 0.2;
-    }
-
 }

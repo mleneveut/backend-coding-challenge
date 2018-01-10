@@ -4,11 +4,14 @@ import com.engagetech.challenge.dto.ExpenseDto;
 import com.engagetech.challenge.entity.Expense;
 import org.junit.Test;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ExpenseMapperTest {
+
+    private final double vat = 0.2;
 
     @Test
     public void test_mapping_dto_dao() {
@@ -30,6 +33,9 @@ public class ExpenseMapperTest {
 
     @Test
     public void test_mapping_dao_dto() {
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(2);
+
         Expense dao = Expense.builder()
                 .id(1)
                 .amount(12.34)
@@ -37,12 +43,13 @@ public class ExpenseMapperTest {
                 .reason("train tickets")
                 .build();
 
-        ExpenseDto dto = ExpenseMapper.instance().toExpenseDto(dao);
+        ExpenseDto dto = ExpenseMapper.instance().toExpenseDto(dao, vat);
 
         assertThat(dto).isNotNull();
         assertThat(dto.getId()).isEqualTo(dao.getId());
         assertThat(dto.getDate()).isEqualTo(dao.getDate());
         assertThat(dto.getAmount()).isEqualTo(dao.getAmount());
         assertThat(dto.getReason()).isEqualTo(dao.getReason());
+        assertThat(nf.format(dto.getVat())).isEqualTo("2.06");
     }
 }
